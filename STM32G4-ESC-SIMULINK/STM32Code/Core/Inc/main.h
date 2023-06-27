@@ -37,6 +37,7 @@ extern "C" {
 #include "stm32g4xx_ll_utils.h"
 #include "stm32g4xx_ll_pwr.h"
 #include "stm32g4xx_ll_dma.h"
+#include "stm32g4xx_ll_usart.h"
 #include "stm32g4xx_ll_gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -68,6 +69,7 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 void   MX_GPIO_Init(void);
+void   MX_USART2_UART_Init(void);
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
