@@ -36,3 +36,5 @@ After you've installed everything above, you should be able to just load up the 
 points to
 
  ``ROOTDIR\STM32G4-ESC1\STM32G4-ESC-SIMULINK\STM32Code\STM32G4-ESC-Simulink.ioc``
+
+ Any changes to the IOC file for hardware config should be done to the file in the STM32Code folder.

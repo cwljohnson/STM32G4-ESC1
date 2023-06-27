@@ -1,16 +1,13 @@
-
-STM32G4-ESC-DEMO/Debug/
-
-STM32G4-ESC-SIMULINK/slprj/
-
-STM32G4-ESC-SIMULINK/STM32_G4_ESC_blinky_ert_rtw/
-
 *.bin
 *.elf
 *.hex
 *.slxc
-STM32G4-ESC-SIMULINK/STM32G4-ESC-Simulink/
 
 *.ioctmprsv
-
 *.ioctmp
+*.autosave
+
+STM32G4-ESC-DEMO/Debug/
+STM32G4-ESC-SIMULINK/slprj/
+STM32G4-ESC-SIMULINK/STM32_G4_ESC_blinky_ert_rtw/
+STM32G4-ESC-SIMULINK/STM32G4-ESC-Simulink/
