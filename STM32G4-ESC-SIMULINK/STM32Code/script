@@ -1,0 +1,10 @@
+config load "C:\QUTMS\git\STM32G4-ESC1\STM32G4-ESC-SIMULINK\STM32Code\STM32G4-ESC-Simulink.ioc"
+project toolchain STM32CubeIDE
+
+SetStructure Advanced
+
+project setCustomFWPath "C:\Users\n10201378\STM32Cube\Repository\STM32Cube_FW_G4_V1.5.0"
+
+project generate 
+
+exit wait
