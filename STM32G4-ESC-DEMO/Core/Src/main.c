@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -58,9 +59,12 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+volatile uint16_t adc_dma[3];
+
 volatile uint16_t adc_reading = 0;
 void adc1_it_handler(void) {
-	adc_reading = LL_ADC_REG_ReadConversionData12(ADC1);
+	adc_reading = adc_dma[0];
+//	adc_reading = LL_ADC_REG_ReadConversionData12(ADC1);
 }
 /* USER CODE END 0 */
 
@@ -99,6 +103,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_ADC1_Init();
   MX_TIM1_Init();
@@ -131,6 +136,13 @@ int main(void)
   // start regular conversions (p619, so can be triggered from timer)
   LL_ADC_REG_StartConversion(ADC1);
 
+  // enable DMA
+  LL_DMA_ConfigAddresses(DMA1, LL_DMA_CHANNEL_1, &ADC1->DR,  adc_dma, LL_DMA_DIRECTION_PERIPH_TO_MEMORY );
+  LL_DMA_SetDataLength(DMA1, LL_DMA_CHANNEL_1, 3);
+
+  LL_DMA_EnableChannel(DMA1, LL_DMA_CHANNEL_1);
+
+
 
   /* USER CODE END 2 */
 
@@ -145,7 +157,7 @@ int main(void)
   int16_t dc = 100;
   int16_t dc_inc = 10;
 
-  LL_TIM_OC_SetCompareCH3(TIM1, 494);
+  LL_TIM_OC_SetCompareCH3(TIM1, 493);
 
   while (1)
   {
@@ -156,15 +168,15 @@ int main(void)
 //	  LL_ADC_REG_StartConversion(ADC1);
 
 //	  adc_busVoltage = adc_read_blocking();
-	  adc_busVoltage = adc_reading;
+	  adc_busVoltage = adc_dma[0];
 	  // convert ADC reading into voltage
 	  uint32_t adc_mV = (adc_busVoltage * 3300UL) >> 12;
 
 	  // reverse voltage divider to get bus voltage
 	  uint32_t bus_mV = (adc_mV * (100+22)) / 22;
+	  num = sprintf(buffer, "%4i %4i %4i\r\n", adc_dma[0], adc_dma[1], adc_dma[2]);
 
-
-	  num = sprintf(buffer, "ADC: %4i\tADC %4i mV\t%Bus %4i mV\r\n", adc_busVoltage, adc_mV, bus_mV, count);
+//	  num = sprintf(buffer, "ADC: %4i\tADC %4i mV\t%Bus %4i mV\r\n", adc_busVoltage, adc_mV, bus_mV, count);
 
 	  uart_tx_bytes_blocking((uint8_t*)buffer, num);
 

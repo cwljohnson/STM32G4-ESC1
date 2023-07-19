@@ -29,6 +29,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 
 #include "stm32g4xx_ll_adc.h"
+#include "stm32g4xx_ll_dma.h"
 #include "stm32g4xx_ll_rcc.h"
 #include "stm32g4xx_ll_bus.h"
 #include "stm32g4xx_ll_crs.h"
@@ -37,7 +38,6 @@ extern "C" {
 #include "stm32g4xx_ll_cortex.h"
 #include "stm32g4xx_ll_utils.h"
 #include "stm32g4xx_ll_pwr.h"
-#include "stm32g4xx_ll_dma.h"
 #include "stm32g4xx_ll_tim.h"
 #include "stm32g4xx_ll_usart.h"
 #include "stm32g4xx_ll_gpio.h"
@@ -78,6 +78,8 @@ void Error_Handler(void);
 #define P1_L_GPIO_Port GPIOC
 #define VBUS_Pin LL_GPIO_PIN_0
 #define VBUS_GPIO_Port GPIOA
+#define BEMF2_Pin LL_GPIO_PIN_0
+#define BEMF2_GPIO_Port GPIOB
 #define BEMF3_Pin LL_GPIO_PIN_11
 #define BEMF3_GPIO_Port GPIOB
 #define LED_STATUS_Pin LL_GPIO_PIN_6
