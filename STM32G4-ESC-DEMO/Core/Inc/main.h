@@ -48,7 +48,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+void adc1_it_handler(void);
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -74,8 +74,18 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define P1_L_Pin LL_GPIO_PIN_13
+#define P1_L_GPIO_Port GPIOC
+#define VBUS_Pin LL_GPIO_PIN_0
+#define VBUS_GPIO_Port GPIOA
+#define BEMF3_Pin LL_GPIO_PIN_11
+#define BEMF3_GPIO_Port GPIOB
 #define LED_STATUS_Pin LL_GPIO_PIN_6
 #define LED_STATUS_GPIO_Port GPIOC
+#define P1_H_Pin LL_GPIO_PIN_8
+#define P1_H_GPIO_Port GPIOA
+#define GPIO_BEMF_Pin LL_GPIO_PIN_5
+#define GPIO_BEMF_GPIO_Port GPIOB
 #ifndef NVIC_PRIORITYGROUP_0
 #define NVIC_PRIORITYGROUP_0         ((uint32_t)0x00000007) /*!< 0 bit  for pre-emption priority,
                                                                  4 bits for subpriority */

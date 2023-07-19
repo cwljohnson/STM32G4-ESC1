@@ -58,6 +58,10 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+volatile uint16_t adc_reading = 0;
+void adc1_it_handler(void) {
+	adc_reading = LL_ADC_REG_ReadConversionData12(ADC1);
+}
 /* USER CODE END 0 */
 
 /**
@@ -108,12 +112,25 @@ int main(void)
   LL_ADC_Enable(ADC1);
   LL_mDelay(1000);
 
+  LL_ADC_EnableIT_EOC(ADC1);
+
   // start output signal generation
-  LL_TIM_CC_EnableChannel(TIM1, LL_TIM_CHANNEL_CH1 | LL_TIM_CHANNEL_CH1N);
+  LL_TIM_CC_EnableChannel(TIM1,
+		  LL_TIM_CHANNEL_CH1 | LL_TIM_CHANNEL_CH1N |
+		  LL_TIM_CHANNEL_CH3 | LL_TIM_CHANNEL_CH3N
+		  );
 
   LL_TIM_EnableCounter(TIM1);
 
   LL_TIM_GenerateEvent_UPDATE(TIM1);
+
+  // set GPIO BEMF low to enable voltage divider
+  LL_GPIO_ResetOutputPin(GPIO_BEMF_GPIO_Port, GPIO_BEMF_Pin);
+//  LL_GPIO_SetOutputPin(GPIO_BEMF_GPIO_Port, GPIO_BEMF_Pin);
+
+  // start regular conversions (p619, so can be triggered from timer)
+  LL_ADC_REG_StartConversion(ADC1);
+
 
   /* USER CODE END 2 */
 
@@ -128,19 +145,23 @@ int main(void)
   int16_t dc = 100;
   int16_t dc_inc = 10;
 
+  LL_TIM_OC_SetCompareCH3(TIM1, 494);
+
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 	  LL_GPIO_TogglePin(LED_STATUS_GPIO_Port, LED_STATUS_Pin);
+//	  LL_ADC_REG_StartConversion(ADC1);
 
-	  adc_busVoltage = adc_read_blocking();
+//	  adc_busVoltage = adc_read_blocking();
+	  adc_busVoltage = adc_reading;
 	  // convert ADC reading into voltage
 	  uint32_t adc_mV = (adc_busVoltage * 3300UL) >> 12;
 
 	  // reverse voltage divider to get bus voltage
-	  uint32_t bus_mV = (adc_mV * (169+18)) / 18;
+	  uint32_t bus_mV = (adc_mV * (100+22)) / 22;
 
 
 	  num = sprintf(buffer, "ADC: %4i\tADC %4i mV\t%Bus %4i mV\r\n", adc_busVoltage, adc_mV, bus_mV, count);
@@ -159,6 +180,7 @@ int main(void)
 //
 
 	  LL_TIM_OC_SetCompareCH1(TIM1, (dc * (500-1))/1000);
+
 
 	  count++;
 	  LL_mDelay(100);
